@@ -228,7 +228,7 @@ t.test("Editor.EditArea#_domPath", function() {
 });
 
 t.test("Editor.EditArea#_set/_getContent", function() {
-	t.expect(4);
+	t.expect(6);
 	
 	t.stop();
 	setTimeout(function() {
@@ -251,6 +251,16 @@ t.test("Editor.EditArea#_set/_getContent", function() {
 		window.t_editor.toolbar.getTool("strike").press();
 		content = window.t_editor.cleaner.clean(window.t_editor.editArea._getContent()).toLowerCase();
 		/*4*/ t.ok(/<strike>.*hello world.*<\/strike>/.test(content), "The strike button produces a strike tag.");
+		
+		window.t_editor.editArea._select();
+		window.t_editor.toolbar.getTool("unorderedlist").press();
+		content = window.t_editor.cleaner.clean(window.t_editor.editArea._getContent()).toLowerCase();
+		/*5*/ t.ok(/<ul><li>.*hello world.*<\/li><\/ul>/.test(content), "The unorderedlist button produces a ul and li tag.");
+		
+		window.t_editor.editArea._select();
+		window.t_editor.toolbar.getTool("orderedlist").press();
+		content = window.t_editor.cleaner.clean(window.t_editor.editArea._getContent()).toLowerCase();
+		/*6*/ t.ok(/<ol><li>.*hello world.*<\/li><\/ol>/.test(content), "The orderedlist button produces a ol and li tag.");
 		
 		t.start();
 	}, 10);

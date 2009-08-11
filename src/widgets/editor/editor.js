@@ -26,9 +26,16 @@
 			ITALICS_LABEL : "I",
 
 			STRIKE_TITLE : "Strikethrough",
-			STRIKE_LABEL : "Strike"
+			STRIKE_LABEL : "Strike",
 			
+			UNORDERED_TITLE : "Unordered list",
+			UNORDERED_LABEL : "unordered list",
+			
+			ORDERED_TITLE : "Ordered list",
+			ORDERED_LABEL : "ordered list"
+
 		/*
+			
 			BLOCK_TITLE : "Blockquote",
 			BLOCK_LABEL : "blockquote",
 
@@ -93,7 +100,7 @@
 			this.toolbar = new glow.widgets.Editor.Toolbar(this);
 			
 			if (this._opts.toolset == "basic") {
-				this.toolbar._addToolset("italics", "bold", "strike"/*, "blockquote"*/);
+				this.toolbar._addToolset("italics", "bold", "strike", /*"blockquote",*/ "unorderedlist", "orderedlist");
 			}
 			else throw new Exception("Unknown toolset name.");
 			
@@ -291,7 +298,7 @@ Idler.prototype._stop = function() {
 
 			this.opts = opts || {};
 			
-			this.whitelist = ["em", "strong", "strike", "p", "br", "blockquote"]; // TODO: support tags.attributes
+			this.whitelist = ["em", "strong", "strike", "p", "br", /*"blockquote",*/ "ul", "ol", "li"]; // TODO: support tags.attributes
 		}
 		
 		// runs before clean
@@ -513,7 +520,7 @@ Idler.prototype._stop = function() {
 				myToolbar._addToolset("Bold", "Italics")
 				.addButton("MyCustomButton", opts); // will be chainable
 		 */
-		 glow.widgets.Editor.Toolbar.prototype._addToolset = function() {
+		 glow.widgets.Editor.Toolbar.prototype._addToolset = function(/*arguments*/) {
 		 	var toolToAdd;
 		 	for (var i = 0, l = arguments.length; i < l; i++) {
 		 		if ( (toolToAdd = this.editor._tools[arguments[i]]) ) {
@@ -553,14 +560,14 @@ Idler.prototype._stop = function() {
 			H6:         true,
 			DIV:        true,
 			ADDRESS:	true,
-//			BLOCKQUOTE: true,
+			BLOCKQUOTE: true,
 			CENTER:		true,
 			PRE:        true,
 			CODE:       true,
 			A:          true,
-			UL:         true,
-			OL:         true,
-			LI:         true,
+//			UL:         true,
+//			OL:         true,
+//			LI:         true,
 			DL:         true,
 			DT:         true,
 			DD:         true,
@@ -692,8 +699,8 @@ Idler.prototype._stop = function() {
 		 */
 		glow.widgets.Editor.Toolbar.prototype._update = function(domPath) { /*debug*///console.log("glow.widgets.Editor.Toolbar.prototype._update("+domPath+")")
 		 	var handled = false;
-		 	for (var i = 0, l = this._tools.length; i < l; i++) {
-		 		if (domPath.indexOf("|"+this._tools[i].tag+"|") > -1) {
+			for (var i = 0, l = this._tools.length; i < l; i++) {
+				if (domPath.indexOf("|"+this._tools[i].tag+"|") > -1) {
 		 			this._tools[i].activate();
 		 			handled = true;
 		 		}
@@ -927,19 +934,41 @@ Idler.prototype._stop = function() {
 						command:    "strikethrough",
 						action:     function() { tag.call(this.editor.editArea, this.command); return false; }
 					}
-				}
-				/* tag.call(this.editor.editArea, this.command)
-				,
-				blockquote: {
+				},
+/*
+ 				blockquote: {
 					name : "blockquote", 
 					opts : {
 						title:      localeModule.BLOCK_TITLE,
 						label:      localeModule.BLOCK_LABEL,
 						tag:		"blockquote",
-						command:    "formatblock",
-						action:     function() { tag.call(this.editor.editArea, this.command, 'blockquote'); return false; }
+						command:    "indent",
+						action:     function() { tag.call(this.editor.editArea, this.command); return false; }
 					}
 				},
+*/
+				unorderedlist: {
+					name : "unorderedlist", 
+					opts : {
+						title:      localeModule.UNORDERED_TITLE,
+						label:      localeModule.UNORDERED_LABEL,
+						tag:		"ul",
+						command:    "insertunorderedlist",
+						action:     function() { tag.call(this.editor.editArea, this.command); return false; }
+					}
+				},
+				orderedlist: {
+					name : "orderedlist", 
+					opts : {
+						title:      localeModule.ORDERED_TITLE,
+						label:      localeModule.ORDERED_LABEL,
+						tag:		"ol",
+						command:    "insertorderedlist",
+						action:     function() { tag.call(this.editor.editArea, this.command); return false; }
+					}
+				}
+				/* tag.call(this.editor.editArea, this.command)
+				,
 				heading1:{
 					name : "heading1", 
 					opts : {
@@ -1329,7 +1358,7 @@ Idler.prototype._stop = function() {
 			}
 			else {
 				this._domPath();
-				this.contentWindow.document.execCommand(tagName, false, null);
+				this.contentWindow.document.execCommand(tagName, false, attr);
 			}
 			this.contentWindow.focus();
 			updateArea.call(this);

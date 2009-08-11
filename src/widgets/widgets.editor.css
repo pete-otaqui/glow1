@@ -63,30 +63,37 @@
 			width: 1px;
 		}
 
-		.glowCSSVERSION-editor .editor-toolbar-icon span		{			display: block;			height: 1px;			overflow: hidden;			width: 1px;		}							.glowCSSVERSION-editor .editor-toolbar-item .bold-button { background-image: url(images/editor/button-bold.png); }
-		.glowCSSVERSION-editor .editor-toolbar-item .default  .bold-button { background-position: 0px 0px; }
-		.glowCSSVERSION-editor .editor-toolbar-item .disabled .bold-button { background-position: 0px -28px; }
-		.glowCSSVERSION-editor .editor-toolbar-item .active   .bold-button { background-position: 0px -85px; }
-		.glowCSSVERSION-editor .editor-toolbar-item .hover    .bold-button { background-position: 0px -56px; }
+		.glowCSSVERSION-editor .editor-toolbar-icon span { display: block; height: 1px; overflow: hidden; width: 1px; }
 
+		.glowCSSVERSION-editor .editor-toolbar-item .bold-button { background-image: url(images/editor/button-bold.png); }
 		.glowCSSVERSION-editor .editor-toolbar-item .italics-button { background-image: url(images/editor/button-italics.png); }
-		.glowCSSVERSION-editor .editor-toolbar-item .default  .italics-button { background-position: 0px 0px; }
+		.glowCSSVERSION-editor .editor-toolbar-item .strike-button { background-image: url(images/editor/button-strike.png); }
+		.glowCSSVERSION-editor .editor-toolbar-item .blockquote-button { background-image: url(images/editor/button-blockquote.png); }
+		.glowCSSVERSION-editor .editor-toolbar-item .unorderedlist-button { background-image: url(images/editor/button-unorderedlist.png); }
+		.glowCSSVERSION-editor .editor-toolbar-item .orderedlist-button { background-image: url(images/editor/button-orderedlist.png); }
+
+		.glowCSSVERSION-editor .editor-toolbar-item .default  .editor-toolbar-icon { background-position: 0px 0px; }
+		.glowCSSVERSION-editor .editor-toolbar-item .disabled .editor-toolbar-icon { background-position: 0px -28px; }
+		.glowCSSVERSION-editor .editor-toolbar-item .active   .editor-toolbar-icon { background-position: 0px -85px; }
+		.glowCSSVERSION-editor .editor-toolbar-item .hover    .editor-toolbar-icon { background-position: 0px -56px; }
+
+		
+/*
+ 		.glowCSSVERSION-editor .editor-toolbar-item .default  .italics-button { background-position: 0px 0px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .disabled .italics-button { background-position: 0px -28px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .active   .italics-button { background-position: 0px -85px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .hover    .italics-button { background-position: 0px -56px; }
 
-		.glowCSSVERSION-editor .editor-toolbar-item .strike-button { background-image: url(images/editor/button-strike.png); }
-		.glowCSSVERSION-editor .editor-toolbar-item .default  .strike-button { background-position: 0px 0px; }
+ 		.glowCSSVERSION-editor .editor-toolbar-item .default  .strike-button { background-position: 0px 0px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .disabled .strike-button { background-position: 0px -28px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .active   .strike-button { background-position: 0px -85px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .hover    .strike-button { background-position: 0px -56px; }
-		
-		.glowCSSVERSION-editor .editor-toolbar-item .blockquote-button { background-image: url(images/editor/button-blockquote.png); }
+
 		.glowCSSVERSION-editor .editor-toolbar-item .default  .blockquote-button { background-position: 0px 0px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .disabled .blockquote-button { background-position: 0px -28px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .active   .blockquote-button { background-position: 0px -85px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .hover    .blockquote-button { background-position: 0px -56px; }
-
+*/
 		.glowCSSVERSION-editor .glowCSSVERSION-hidden {position: absolute; left: -2500px; width: 1px;}
 
 
@@ -102,6 +109,9 @@
 		.editor-dark .editor-toolbar-item .italics-button { background-image: url(images/editor/dark-button-italics.png); }
 		.editor-dark .editor-toolbar-item .strike-button { background-image: url(images/editor/dark-button-strike.png); }
 		.editor-dark .editor-toolbar-item .blockquote-button { background-image: url(images/editor/dark-button-blockquote.png); }
+		.editor-dark .editor-toolbar-item .blockquote-button { background-image: url(images/editor/dark-button-blockquote.png); }
+		.editor-dark .editor-toolbar-item .unorderedlist-button { background-image: url(images/editor/dark-button-unorderedlist.png); }
+		.editor-dark .editor-toolbar-item .orderedlist-button { background-image: url(images/editor/dark-button-orderedlist.png); }
 
 
 /* END EDITOR */
