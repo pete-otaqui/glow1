@@ -28,8 +28,8 @@
 			list-style: none;
 			float: left;
 			display: block;
-			width: 26px;
-			/*height: 28px;*/
+			/*width: 26px;
+			height: 24px;*/
 			margin: 0 !important;
 			padding: 0 !important;
 		}
@@ -39,8 +39,8 @@
 			display: block;
 			margin: 0;
 			padding: 0;
-			width: 26px;
-			/*height: 28px;*/
+			/*width: 26px;
+			height: 24px;*/
 			overflow: hidden;
 		}
 
@@ -77,6 +77,20 @@
 		.glowCSSVERSION-editor .editor-toolbar-item .active   .editor-toolbar-icon { background-position: 0px -85px; }
 		.glowCSSVERSION-editor .editor-toolbar-item .hover    .editor-toolbar-icon { background-position: 0px -56px; }
 
+		
+		/* DROPDOWN */
+		
+		.glowCSSVERSION-editor .editor-toolbar-dropdown { display: block; width: 4em; }
+		.glowCSSVERSION-editor .editor-toolbar-dropdown span      span { display: block; width: 4em; }
+		.glowCSSVERSION-editor .editor-toolbar-dropdown .disabled span { color: #aaa; }
+		.glowCSSVERSION-editor .editor-toolbar-dropdown .active   span { background: #ccc; }
+		.glowCSSVERSION-editor .editor-toolbar-dropdown .hover    span { background: #fff; }
+		
+		.overlayMenu {background: #ccc; border: 1px solid #b1b1b1;}
+		.overlayMenu ul,
+		.overlayMenu ul li {list-style: none; margin: 0; padding: 0;}
+		.overlayMenu ul li.highlighted {background: #999; cursor: pointer;}
+		.overlayMenu ul li a {display: block; border: 1px solid; font-size: 1em;}
 		
 /*
  		.glowCSSVERSION-editor .editor-toolbar-item .default  .italics-button { background-position: 0px 0px; }
