@@ -80,17 +80,81 @@
 		
 		/* DROPDOWN */
 		
-		.glowCSSVERSION-editor .editor-toolbar-dropdown { display: block; width: 4em; }
-		.glowCSSVERSION-editor .editor-toolbar-dropdown span      span { display: block; width: 4em; }
-		.glowCSSVERSION-editor .editor-toolbar-dropdown .disabled span { color: #aaa; }
-		.glowCSSVERSION-editor .editor-toolbar-dropdown .active   span { background: #ccc; }
-		.glowCSSVERSION-editor .editor-toolbar-dropdown .hover    span { background: #fff; }
+		.glowCSSVERSION-editor .editor-toolbar-dropdown {
+			display: block;
+			width: 84px;
+			margin: 0 3px 0 3px;
+		}
+		.glowCSSVERSION-editor .editor-toolbar-dropdown a {
+			color: black;
+			text-decoration: none;
+			font: 13px arial;
+		}
+		.glowCSSVERSION-editor .editor-toolbar-dropdown span span {
+			display: block;
+			padding: 1px 16px 1px 4px;
+			border: 1px solid #ccc;
+			height: 16px;
+			line-height: 16px;
+			margin: 3px 0 0 2px;
+			background: #fff url(images/editor/menuarrow.png) no-repeat scroll right 8px;
+			-moz-background-clip: border;
+			-moz-background-inline-policy: continuous;
+			-moz-background-origin: padding;
+			overflow: hidden;
+		}
+		.glowCSSVERSION-editor .editor-toolbar-dropdown .disabled span {
+			background: #aaa url(images/editor/menuarrow.png) no-repeat scroll right -10px;
+		}
+		.glowCSSVERSION-editor .editor-toolbar-dropdown .hover    span {
+			background: #fff url(images/editor/menuarrow.png) no-repeat scroll right 8px;
+		}
+		.glowCSSVERSION-editor .editor-toolbar-dropdown .active    span span {
+			border: 1px solid #aaa;
+		}
+		.glowCSSVERSION-editor .editor-toolbar-dropdown .active   span {
+			background: #ccc url(images/editor/menuarrow.png) no-repeat scroll right 8px;
+		}
 		
-		.overlayMenu {background: #ccc; border: 1px solid #b1b1b1;}
-		.overlayMenu ul,
-		.overlayMenu ul li {list-style: none; margin: 0; padding: 0;}
-		.overlayMenu ul li.highlighted {background: #999; cursor: pointer;}
-		.overlayMenu ul li a {display: block; border: 1px solid; font-size: 1em;}
+		.overlayMenu {
+			background: #ccc; border: 1px solid #b1b1b1;
+			font: 13px arial;
+		}
+		.overlayMenu ul
+		 {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		
+		.overlayMenu ul li {
+			padding: 2px 4px 2px 4px;
+		}
+		
+		.overlayMenu ul li.highlighted { background: #999; cursor: pointer; }
+		.overlayMenu ul .heading1 { font-size: 18px; }
+		.overlayMenu ul .heading2 { font-size: 16px; }
+		.overlayMenu ul .heading3 { font-size: 14px; }
+		.overlayMenu ul li        { font-size: 12px; }
+		/*.overlayMenu ul li a {display: block; border: 1px solid; font-size: 1em;}*/
+		
+		/* DROPDOWN DARK */
+		
+		.glowCSSVERSION-editor .editor-dark .editor-toolbar-dropdown span span {
+			border: 1px solid #666;
+			background: transparent url(images/editor/menuarrow.png) no-repeat scroll right -12px;
+			color: #fff;
+		}
+		
+		.glowCSSVERSION-editor .editor-dark .editor-toolbar-dropdown .hover  span  span {
+			border: 1px solid #ccc;
+		}
+		
+		.overlayMenu-dark {
+			background: #333; border: 1px solid #ccc;
+			color: #fff;
+		}
+		.overlayMenu-dark ul li.highlighted { background: #000; }
 		
 /*
  		.glowCSSVERSION-editor .editor-toolbar-item .default  .italics-button { background-position: 0px 0px; }
@@ -126,6 +190,5 @@
 		.editor-dark .editor-toolbar-item .blockquote-button { background-image: url(images/editor/dark-button-blockquote.png); }
 		.editor-dark .editor-toolbar-item .unorderedlist-button { background-image: url(images/editor/dark-button-unorderedlist.png); }
 		.editor-dark .editor-toolbar-item .orderedlist-button { background-image: url(images/editor/dark-button-orderedlist.png); }
-
 
 /* END EDITOR */

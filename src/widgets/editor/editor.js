@@ -531,8 +531,10 @@ Idler.prototype._stop = function() {
 		 */
 		 glow.widgets.Editor.Toolbar.prototype._addToolset = function(/*arguments*/) {
 		 	var toolToAdd;
+		 	
 		 	for (var i = 0, l = arguments.length; i < l; i++) {
 		 		if ( (toolToAdd = this.editor._tools[arguments[i]]) ) {
+		 			toolToAdd.opts.theme = this.editor._opts.theme; // tools inherit theme from associated editor theme
 					addTool.call(this, glow.widgets.Editor.Toolbar.prototype._toolFactory(toolToAdd));
 				}
 		 	}
@@ -808,7 +810,7 @@ Idler.prototype._stop = function() {
 			@description
 			@function
 		 */
-		 glow.widgets.Editor.Toolbar.Tool.prototype.activate = function() {
+		 glow.widgets.Editor.Toolbar.Tool.prototype.activate = function() { /*debug*///console.log(this.type+".activate()");
 			this.isActive = true;
 			glow.events.fire(this, 'activate');
 		}
@@ -820,7 +822,7 @@ Idler.prototype._stop = function() {
 			@description
 			@function
 		 */
-		glow.widgets.Editor.Toolbar.Tool.prototype.deactivate = function() {
+		glow.widgets.Editor.Toolbar.Tool.prototype.deactivate = function() { /*debug*///console.log(this.type+".deactivate()");
 			this.isActive = false;
 			glow.events.fire(this, 'deactivate');
 		}
@@ -859,7 +861,7 @@ Idler.prototype._stop = function() {
 		glow.widgets.Editor.Toolbar.Tool.prototype.press = function() {
 			if (this.isEnabled) {
 				this.action.call(this);
-				if (!this.isActive) this.activate();
+				if (!this.isActive && this.type == "button") this.activate();
 				else this.deactivate();
 				this.editor._lastDomPath = null; // invalidate the current dom path (this is required on some browsers that "wrap" selections) to force ondompathchange to fire when the user clicks away from the current selection
 			}
@@ -922,23 +924,25 @@ Idler.prototype._stop = function() {
 			this.base = this.Base.prototype;
 			this.Base.apply(this, arguments);
 
-
 			this.type = "dropdown";
-
+			
+			this._opts = {
+				title: opts.title || name,
+				label: opts.lable || name,
+				theme: opts.theme || 'light'
+			};
 
 			// create dropdown tool-link element
-			var buttonClass = name.toLowerCase() + "-dropDown";
-			this.element = glow.dom.create('<li class="editor-toolbar-item"><span class="editor-toolbar-dropdown"><a href="#" title="'+(opts.title || name)+'" tabindex="-1"><span class="'+buttonClass+'"><span>'+(opts.label || name)+'<\/span><\/span><\/a><\/span><\/li>');
+			var buttonClass = name.toLowerCase() + "-dropDown"; // like: formatblock-dropDown
+			this.element = glow.dom.create('<li class="editor-toolbar-item"><span class="editor-toolbar-dropdown"><a href="#" title="'+this._opts.title+'" tabindex="-1"><span class="'+buttonClass+'"><span>'+this._opts.label+'<\/span><\/span><\/a><\/span><\/li>');
 
-			
  			// shortcuts
  			var that = this,
 				toolLink = this.element.get("a");
- 			that.icon = this.element.get(".editor-toolbar-dropdown"); 
+ 				this.icon = this.element.get(".editor-toolbar-dropdown"); 
  
-
 			// create overlaymenu child obect - this is used as the menu when the drop-down tool-link is clicked on
-			that.overlayMenu = new glow.widgets.Editor.Toolbar.OverlayMenu({
+			this.overlayMenu = new glow.widgets.Editor.Toolbar.OverlayMenu({
 				menuItems: opts.menuItems,
 				onClick: function(e) {
 					
@@ -946,10 +950,10 @@ Idler.prototype._stop = function() {
 					that.label(that.overlayMenu.menuItems[that.overlayMenu.selected].title);
 
 					// fire tool-link - again, this is done from the overlayMenu because the tool-link isn't being interacted with
-					events.fire(that, "activate");
+					//events.fire(that, "activate");
 					that.press();
-					events.fire(that, "deactivate");
-					that.deactivate();
+					//events.fire(that, "deactivate");
+					//that.deactivate();
 					
 					if (glow.env.ie) {
 						that.editor.editArea.contentWindow.focus();
@@ -957,13 +961,13 @@ Idler.prototype._stop = function() {
 					
 				}
 			},
-			that);  // passed into dropDown param - could refactor this out at a later date?
+			this);  // passed into dropDown param - could refactor this out at a later date?
 
 
 			// getter/setter for the label of the tool-link
-			that.label = function(set) {
-				if (typeof set != "undefined") {	
-					that.element.get("a span span").html(set);
+			this.label = function(newLabel) {
+				if (typeof newLabel != "undefined") {	
+					that.element.get("a span span").html(newLabel);
 					return this;
 				}
 				else {
@@ -973,7 +977,7 @@ Idler.prototype._stop = function() {
 
 
 			// set the label to be the last text entry (normal text) in the overlaymenu
-			that.label(that.overlayMenu.menuItems[that.overlayMenu.selected].title);
+			this.label(this.overlayMenu.menuItems[this.overlayMenu.selected].title);
 
 
 			// ***
@@ -1021,12 +1025,12 @@ Idler.prototype._stop = function() {
 			
 			// ***
 			// activate/deactivate events
-			glow.events.addListener(this, "activate", function() {
+			glow.events.addListener(this, "activate", function() { /*debug*///console.log("activate");
 				if (this.isEnabled) {
 					toolLink.addClass("active");
 				}
 			}, this);
- 			glow.events.addListener(this, "deactivate", function() {
+ 			glow.events.addListener(this, "deactivate", function() {/*debug*///console.log("deactivate");
 				toolLink.removeClass("active");
 			}, this);
 			// ***
@@ -1058,29 +1062,28 @@ Idler.prototype._stop = function() {
 					   (e.key == "LEFT")
 					|| (e.key == "RIGHT")
 				) {
-					that.overlayMenu.hide();
+					_closeOverlayMenu.call(that);
 					return false;
 				}
 			});
-			// ***
-
 
 			// opens the overlaymenu and sets it to appear below the dropdown toollink
-			function _openOverlayMenu() {
+			function _openOverlayMenu() { /*debug*///console.log("_openOverlayMenu()");
+				that.activate();
 				that.overlayMenu.show();
 				var inputOffset = that.element.offset();
 				that.overlayMenu.container
 					.css("left", (inputOffset.left + 5))
 					.css("top", (inputOffset.top + that.element[0].offsetHeight + 2));
 			}		
-
-
 		}
 
+		function _closeOverlayMenu() { /*debug*///console.log("_closeOverlayMenu()");
+			this.deactivate();
+			this.overlayMenu.hide();
+		}
 		
 		glow.lang.extend(glow.widgets.Editor.Toolbar.DropDown, glow.widgets.Editor.Toolbar.Tool);
-
-
 
 		/**
 			@ignore
@@ -1102,8 +1105,7 @@ Idler.prototype._stop = function() {
 			@type Number
 			@description Indicates index value of selected menu item
 		*/
-		glow.widgets.Editor.Toolbar.OverlayMenu = function(opts, dropDown) {
-
+		glow.widgets.Editor.Toolbar.OverlayMenu = function(opts, dropDown) { /*debug*///console.log("new glow.widgets.Editor.Toolbar.OverlayMenu("+opts+", "+dropDown+")");
 
 			var overlayMenuContents = glow.dom.create("<ul></ul>"), // html for the overlay
 				overlayMenu;										// object to return
@@ -1130,6 +1132,11 @@ Idler.prototype._stop = function() {
 				closeOnEsc: true,
 				autoPosition: false
 			});
+			
+			// inherit the theme of the dropdown we are associated with
+			if (1 || dropDown._opts.theme) {
+				overlayMenu.container.addClass('overlayMenu-' + dropDown._opts.theme);
+			}
 
 			// Add opts.menuItems onto the overlayMenu. This make
 			overlayMenu.menuItems = opts.menuItems;
@@ -1146,7 +1153,7 @@ Idler.prototype._stop = function() {
 				// shortcut
 				menuItem = overlayMenu.menuItems[menuItem];
 				// create and add the html to the overlayMenuContents
-				overlayMenuContents.append('<li tabIndex="-1">' + menuItem.title + '</li>');
+				overlayMenuContents.append(glow.lang.interpolate(menuItem.template, {title: menuItem.title}));
 				// if menuItem.selected == true then set overlayMenu.selected to the index value
 				menuItem.selected = menuItem.selected || false;
 				if (menuItem.selected == true) {
@@ -1156,7 +1163,7 @@ Idler.prototype._stop = function() {
 			}
 			
 			
-			// when the overlayMenu is hidden by clicking on the mask then deactivate the dropdown tool-link
+			// when the overlayMenu is hidden by clicking on the mask then deactivate the dropDown tool-link
 			events.addListener(overlayMenu, "hide", function(){
 				if (dropDown.isActive == true) {
 					events.fire(dropDown, "deactivate");
@@ -1196,6 +1203,7 @@ Idler.prototype._stop = function() {
 				_menuItemClick(e);
 				return false
 			});
+
 			events.addListener(overlayMenuContents, "keydown", function(e){
 
 				var toolLink = dropDown.element.get("a");
@@ -1207,7 +1215,7 @@ Idler.prototype._stop = function() {
 						moveFocusRight(e, arrLi);
 						break;
 					case "ESC":
-						overlayMenu.hide();
+						_closeOverlayMenu.call(dropDown);
 						// If keyboard access is being used then we want to throw the focus at the toollink
 						toolLink[0].focus();
 						break;
@@ -1215,13 +1223,13 @@ Idler.prototype._stop = function() {
 						// Fake a LEFT ARROW key press on the dropDown tool in the editor toolbar
 						toolLink[0].focus();
 						moveFocusLeft(new events.Event({source: toolLink[0]}), dropDown.editor.toolbar.element.get("a"));
-						overlayMenu.hide();
+						_closeOverlayMenu.call(dropDown);
 						break;
 					case "RIGHT":
 						// Fake a RIGHT ARROW key press on the dropDown tool in the editor toolbar
 						toolLink[0].focus();
 						moveFocusRight(new events.Event({source: toolLink[0]}), dropDown.editor.toolbar.element.get("a"));
-						overlayMenu.hide();
+						_closeOverlayMenu.call(dropDown);
 						break;
 					case "ENTER":
 						_menuItemClick(e);
@@ -1234,7 +1242,6 @@ Idler.prototype._stop = function() {
 				e.preventDefault();
 				return false;
 			});
-			
 			// Internal click function.  Calls user defined click event
 			function _menuItemClick(e) {
 				var source = $(e.source);
@@ -1246,7 +1253,7 @@ Idler.prototype._stop = function() {
 				overlayMenu.selected = _findPositionInNodelist(source);
 
 				// close overlay
-				overlayMenu.hide();
+				_closeOverlayMenu.call(dropDown);
 
 				// Call user defined click event
 				opts.onClick(e);
@@ -1407,20 +1414,24 @@ Idler.prototype._stop = function() {
 						menuItems: [
 							{
 								title:      localeModule.HEADINGLEVELONE_TITLE,
-								tag:		"h1"
+								template:	'<li class="heading1">{title}</li>',
+								tag:		'h1'
 
 							},
 							{
 								title:      localeModule.HEADINGLEVELTWO_TITLE,
-								tag:		"h2"
+								template:	'<li class="heading2">{title}</li>',
+								tag:		'h2'
 							},
 							{
 								title:      localeModule.HEADINGLEVELTHREE_TITLE,
-								tag:		"h3"
+								template:	'<li class="heading3">{title}</li>',
+								tag:		'h3'
 							},
 							{
 								title:      localeModule.NORMAL_TITLE,
-								tag:		"p",
+								template:	'<li>{title}</li>',
+								tag:		'p',
 								selected:	true
 							}
 						]
