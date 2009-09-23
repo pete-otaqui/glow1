@@ -1134,7 +1134,7 @@ Idler.prototype._stop = function() {
 			});
 			
 			// inherit the theme of the dropdown we are associated with
-			if (1 || dropDown._opts.theme) {
+			if (dropDown._opts.theme) {
 				overlayMenu.container.addClass('overlayMenu-' + dropDown._opts.theme);
 			}
 
