@@ -942,27 +942,28 @@ Idler.prototype._stop = function() {
  				this.icon = this.element.get(".editor-toolbar-dropdown"); 
  
 			// create overlaymenu child obect - this is used as the menu when the drop-down tool-link is clicked on
-			this.overlayMenu = new glow.widgets.Editor.Toolbar.OverlayMenu({
-				menuItems: opts.menuItems,
-				onClick: function(e) {
-					
-					// change the dropdown tool-link label
-					that.label(that.overlayMenu.menuItems[that.overlayMenu.selected].title);
-
-					// fire tool-link - again, this is done from the overlayMenu because the tool-link isn't being interacted with
-					//events.fire(that, "activate");
-					that.press();
-					//events.fire(that, "deactivate");
-					//that.deactivate();
-					
-					if (glow.env.ie) {
-						that.editor.editArea.contentWindow.focus();
+			this.overlayMenu = new glow.widgets.Editor.Toolbar.OverlayMenu(
+				this,
+				{
+					menuItems: opts.menuItems,
+					onClick: function(e) {
+						
+						// change the dropdown tool-link label
+						that.label(that.overlayMenu.menuItems[that.overlayMenu.selected].title);
+	
+						// fire tool-link - again, this is done from the overlayMenu because the tool-link isn't being interacted with
+						//events.fire(that, "activate");
+						that.press();
+						//events.fire(that, "deactivate");
+						//that.deactivate();
+						
+						if (glow.env.ie) {
+							that.editor.editArea.contentWindow.focus();
+						}
+						
 					}
-					
 				}
-			},
-			this);  // passed into dropDown param - could refactor this out at a later date?
-
+			);
 
 			// getter/setter for the label of the tool-link
 			this.label = function(newLabel) {
@@ -1105,22 +1106,19 @@ Idler.prototype._stop = function() {
 			@type Number
 			@description Indicates index value of selected menu item
 		*/
-		glow.widgets.Editor.Toolbar.OverlayMenu = function(opts, dropDown) { /*debug*///console.log("new glow.widgets.Editor.Toolbar.OverlayMenu("+opts+", "+dropDown+")");
+		glow.widgets.Editor.Toolbar.OverlayMenu = function(dropDown, opts) { /*debug*///console.log("new glow.widgets.Editor.Toolbar.OverlayMenu("+opts+", "+dropDown+")");
 
-			var overlayMenuContents = glow.dom.create("<ul></ul>"), // html for the overlay
-				overlayMenu;										// object to return
-			var that = this;
-
+			var overlayMenuContents = glow.dom.create('<ul></ul>'), // html for the overlay
+				overlayMenu,
+				that = this;
 
 			// default function requires a glow.dom.nodeList passed in, will return the html of the nodeList
 			// This param allows you to customise how each menuItem looks
 			// DON'T THINK WE NEED THIS?
 			opts.formatItem = opts.formatItem || function(o) { return o.html(); };
-			
-			
+						
 			// default empty function for onclick
 			opts.onClick = opts.onClick || function() {};
-
 
 			// create an overlay that we will use for the menu
 			overlayMenu = new glow.widgets.Overlay(overlayMenuContents, {
@@ -1141,11 +1139,9 @@ Idler.prototype._stop = function() {
 			// Add opts.menuItems onto the overlayMenu. This make
 			overlayMenu.menuItems = opts.menuItems;
 			
-			
 			// param to tell user the index value of the selected menuItem.
 			// default value is null as nothing has been selected yet.
 			overlayMenu.selected = null;
-			
 			
 			// add menuItems onto overlayMenu HTML as <li>s
 			var z = 0;
@@ -1159,18 +1155,16 @@ Idler.prototype._stop = function() {
 				if (menuItem.selected == true) {
 					overlayMenu.selected = z;
 				}
-				z++
+				z++;
 			}
 			
-			
 			// when the overlayMenu is hidden by clicking on the mask then deactivate the dropDown tool-link
-			events.addListener(overlayMenu, "hide", function(){
+			events.addListener(overlayMenu, 'hide', function(){
 				if (dropDown.isActive == true) {
-					events.fire(dropDown, "deactivate");
+					events.fire(dropDown, 'deactivate');
 					dropDown.isActive = false;
 				}
 			});
-			
 			
 			// pass in a tag, and if the tag matches one of the tags in the menuItems return the matching menuItem's title
 			overlayMenu.getTitleFromTag = function(tag) {
@@ -1183,7 +1177,6 @@ Idler.prototype._stop = function() {
 				// return null if no tag matches
 				return null;
 			}
-			
 			
 			var arrLi = overlayMenu.container.get("li");
 			events.addListener(overlayMenuContents, "mouseover", function(e) {
@@ -1204,7 +1197,7 @@ Idler.prototype._stop = function() {
 				return false
 			});
 
-			events.addListener(overlayMenuContents, "keydown", function(e){
+			events.addListener(overlayMenuContents, "keydown", function(e) {
 
 				var toolLink = dropDown.element.get("a");
 				switch(e.key) {
@@ -1430,7 +1423,7 @@ Idler.prototype._stop = function() {
 							},
 							{
 								title:      localeModule.NORMAL_TITLE,
-								template:	'<li>{title}</li>',
+								template:	'<li class="normal">{title}</li>',
 								tag:		'p',
 								selected:	true
 							}
